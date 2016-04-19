@@ -1,6 +1,7 @@
 'use strict'
 
-var mongodb = require('mongodb'),
+var fs = require('fs'),
+    mongodb = require('mongodb'),
     genericPool = require('generic-pool'),
     helmet = require('helmet');
 
@@ -71,6 +72,11 @@ app.use((req, res, next) => {
   console.log(`IP:${req.ips} ${req.method} ${req.path}`);
   next();
 });
+if (config.server.staticFile) {
+  var path = config.server.staticPath;
+  if (path === undefined || !fs.existsSync(path)) path = __dirname + "/../../public";
+  app.use(express.static(path));
+}
 app.use('/v1', postsRouter);
 
 app.listen(port, () => {

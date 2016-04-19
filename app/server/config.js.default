@@ -1,5 +1,10 @@
 'use strict'
 
+var server = {
+  staticFile: true,
+  staticPath: __dirname + '/../../public',
+}
+
 var database = {
   /*
    * Default host: localhost
@@ -24,4 +29,6 @@ var appKey = {
   }
 }
 
+module.exports.server = server;
 module.exports.database = database;
+module.exports.appKey = appKey;
