@@ -1,0 +1,27 @@
+'use strict'
+
+var database = {
+  /*
+   * Default host: localhost
+   * Default port: 27017
+   * Default db: miniwiki
+   */
+  test: {
+    db: 'miniwiki_test'
+  },
+  production: {},
+  development: {
+    db: 'miniwiki_development'
+  },
+}
+
+var appKey = {
+  twitter: {
+    consumer_key: '',
+    consumer_secret: '',
+    access_token: '',
+    access_token_secret: ''
+  }
+}
+
+module.exports.database = database;
