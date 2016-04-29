@@ -1,13 +1,13 @@
 import { Component } from 'angular2/core'
 import { RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS } from 'angular2/router'
 
-import { IndexComponent } from './components/index.component'
-import { ListComponent } from './components/list.component'
-import { PostComponent } from './components/post.component'
+import { IndexComponent } from './components/site/index.component'
+import { PostsComponent } from './components/posts/app.component'
 
 @Component({
-  selector: '',
-  directive: [ROUTER_DIRECTIVES],
+  selector: 'my-app',
+  template: '<router-outlet></router-outlet>',
+  directives: [ROUTER_DIRECTIVES],
   providers: [
     ROUTER_PROVIDERS
   ]
@@ -21,13 +21,15 @@ import { PostComponent } from './components/post.component'
     useAsDefault: true,
   },
   {
-      path: '/l/:name',
-    name: 'List',
-    component: ListComponent,
+    path: '/p',
+    name: 'Posts',
+    component: PostsComponent,
   },
   {
     path: '/p/:name',
-    name: 'Post',
-    component: PostComponent,
+    name: 'Posts',
+    component: PostsComponent,
   }
 ])
+
+export class AppComponent {}
