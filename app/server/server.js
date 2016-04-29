@@ -72,12 +72,23 @@ app.use((req, res, next) => {
   console.log(`IP:${req.ips} ${req.method} ${req.path}`);
   next();
 });
+
+/**
+ * Register custom routers
+ */
+app.use('/v1', postsRouter);
+/**
+ * Config static file path
+ *
+ * If you don't use express to serve static file,
+ * change the option 'confit.server.staticFile' in the 'config.js' to false.
+ */
 if (config.server.staticFile) {
   var path = config.server.staticPath;
   if (path === undefined || !fs.existsSync(path)) path = __dirname + "/../../public";
   app.use(express.static(path));
+  app.use('*', (req, res) => { res.sendFile('index.html', { root: path }) });
 }
-app.use('/v1', postsRouter);
 
 app.listen(port, () => {
   console.log('Server is running...Listening port ' + port);
