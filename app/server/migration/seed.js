@@ -21,6 +21,7 @@ var url = `mongodb://${database.host}:${database.port}/${database.db}`;
 var time = Date.now();
 var initialPost = {
   name: 'Introduction',
+  url: 'introduction',
   author: 'system',
   tag: ['post', 'intro'],
   content: 'First post',
@@ -30,6 +31,7 @@ var initialPost = {
   createdAt: time,
   updatedAt: time,
   lastModified: time,
+  metadata: {},
   comment: [
     {
       commenter: 'system',
@@ -75,10 +77,11 @@ mongoClient.connect(url, (err, db) => {
       var postCount = yield post.count.bind(post);
 
       if (postCount === 0) {
-        yield postsCollection.insertOne().bind(postsCollection, initialPost);
+        yield postsCollection.insertOne.bind(postsCollection, initialPost);
       }
 
       yield postsCollection.createIndex.bind(postsCollection, {'name': 1}, {'unique': true});
+      yield postsCollection.createIndex.bind(postsCollection, {'url': 1}, {'unique': true});
 
       db.close();
     }).then(() => {
