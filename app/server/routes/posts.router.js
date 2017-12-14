@@ -37,12 +37,17 @@ router.route('/post/:name')
     if (data.result != undefined && data.result.ok == 1) {
       res.json({ data: { status: 'ok' } });
     } else {
-      res.json({ data: { status: 'fail' } });
+      if (data.validation != undefined && data.validation == false) {
+        res.json({ data: data });
+      } else {
+        res.sendStatus(500);
+        console.log(data);
+      }
     }
   }, (err) => {
     res.sendStatus(500);
     console.log(err);
-  };
+  });
 })
 .delete((req, res, next) => {
   var name = req.params.name;

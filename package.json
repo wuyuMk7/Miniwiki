@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "PORT=4000 gulp dev",
     "dev:frontend": "",
-    "dev:backend": "",
+    "dev:backend": "gulp dev:backend",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "",
     "production": "",
