@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base href="/">
+    <title></title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">    
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/es6-shim/0.35.0/es6-shim.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/systemjs/0.19.26/system-polyfills.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/2.0.0-beta.15/angular2-polyfills.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/systemjs/0.19.26/system.src.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/2.0.0-beta.15/angular2.dev.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/2.0.0-beta.15/router.js"></script>
+
+    <script src="js/Rx.min.js"></script>
+
+  </head>
+
+  <body>
+    <my-app>Loading...</my-app>
+
+    <script src="dist/js/bundle.js"></script>
+    <script>
+      System.import('main')
+        .then(null, console.error.bind(console));
+    </script>
+  </body>
+</html>

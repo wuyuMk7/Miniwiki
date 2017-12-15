@@ -1,2 +1,2 @@
-# miniwiki
+# Miniwiki
 A mini wiki 
