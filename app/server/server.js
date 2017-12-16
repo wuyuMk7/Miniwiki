@@ -10,6 +10,8 @@ var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
 var app = express();
 
+var assert = require('assert');
+
 var config = require('./config');
 var postsRouter = require('./routes/posts.router.js');
 
@@ -28,13 +30,20 @@ var database = (() => {
 var pool = genericPool.createPool({
   name: 'mongoPool',
   create: (callback) => {
-    mongodb.MongoClient.connect( `mongodb://${database.host}:${database.port}/${database.db}`, {
-      server: { poolSize: 1 }
-    }, (err, db) => {
-      callback(err, db);
+    return new Promise((resolve, reject) => {
+      mongodb.MongoClient.connect( `mongodb://${database.host}:${database.port}/${database.db}`, {
+        server: { poolSize: 1 }
+      }, (err, client) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(client.db(database.db));
+          console.log("Mongodb connected.");
+        }
+      })
     });
   },
-  destroy: (db) => { db.close(); },
+  destroy: (client) => { client.close(); },
   max: 10,
   idleTimeoutMillis: 30000,
   log: false
