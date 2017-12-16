@@ -25,7 +25,7 @@ var database = (() => {
   };
 })();
 
-var pool = genericPool.Pool({
+var pool = genericPool.createPool({
   name: 'mongoPool',
   create: (callback) => {
     mongodb.MongoClient.connect( `mongodb://${database.host}:${database.port}/${database.db}`, {

@@ -1,5 +1,7 @@
-import { Injectable } from 'angular2/core'
-import { Http, Response } from 'angular2/http'
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+
+import { Post } from '../models/post.model';
 
 @Injectable()
 
@@ -7,19 +9,22 @@ export class PostService {
   private _postsUrl = '/api/posts';
   private _postUrl = '/api/post';
 
-  constructor(private _http: Http) {}
+  private posts: Post[];
+
+  constructor(private _http: HttpClient) {}
 
   getPosts() {
-    return this._http.get(this._postsUrl)
-      .map(res => res.json())
-      .map()
+    this._http.get(this._postsUrl).subscribe(data => {
+      this.posts = data['res'];
+    })
   }
 
   getPost(name: string) {
     let postUrl = this._postUrl + name;
 
-    return this._http.get(postUrl)
-      .map(res => res.json())
-      .map()
+    this._http.get(this._postUrl).subscribe(data => {
+      this.posts = data['res'];
+    })
+
   }
 }
