@@ -15,7 +15,6 @@ var del = require('del');
  */
 gulp.task('build:typescript', () => {
   return gulp.src(['app/client/app/**/*.ts','typings/main', 'node_modules/angular2/typings/browser.d.ts'])
-  //return gulp.src(['app/client/app/**/*.ts'])
     .pipe((tsc.createProject('./tsconfig.json')()))
     .js
     //.pipe(uglify())
