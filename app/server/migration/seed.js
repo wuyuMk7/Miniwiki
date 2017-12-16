@@ -66,12 +66,13 @@ function toThunk(fn) {
   }
 }
 
-mongoClient.connect(url, (err, db) => {
+mongoClient.connect(url, (err, client) => {
   if (err) {
     console.log('Fail to connect server.Err: ' + err);
   } else {
     console.log("Connected correctly to server.");
     co(function *() {
+      const db = client.db(database.db);
       var postsCollection = db.collection('posts');
       var post = yield postsCollection.find.bind(postsCollection, {'name': 'Introduction'});
       var postCount = yield post.count.bind(post);
@@ -83,12 +84,12 @@ mongoClient.connect(url, (err, db) => {
       yield postsCollection.createIndex.bind(postsCollection, {'name': 1}, {'unique': true});
       yield postsCollection.createIndex.bind(postsCollection, {'url': 1}, {'unique': true});
 
-      db.close();
+      client.close();
     }).then(() => {
 
     }, (err) => {
       console.log(err.stack);
-      db.close();
+      client.close();
     });
   }
 });
