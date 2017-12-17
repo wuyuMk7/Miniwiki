@@ -26,7 +26,14 @@ var database = (() => {
     db: c.db || 'miniwiki',
   };
 })();
-
+/**
+ * There probably exists some problems.
+ * I resolve object db to the others in create method.
+ * I will close db in the destroy methond.
+ * In fact, I think I should close client object here.
+ * I will modify it in some time.
+ * TODO: Modify db back to client.
+ */
 var pool = genericPool.createPool({
   name: 'mongoPool',
   create: (callback) => {
@@ -37,7 +44,7 @@ var pool = genericPool.createPool({
         if (err) {
           reject(err);
         } else {
-          resolve(client.db(database.db));
+          resolve(client);
           console.log("Mongodb connected.");
         }
       })

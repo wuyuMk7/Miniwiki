@@ -1,6 +1,5 @@
 'use strict'
 
-
 /*
  * Model Post
  * TODO: Translate 'post' into ES6 class.
@@ -65,16 +64,17 @@ class Post {
 
 function all(pool) {
   return new Promise((resolve, reject) => {
-    pool.acquire().then((db) => {
+    pool.acquire().then((client) => {
       //resolve(db.collection('posts').find());
+      const db = client.db(client.s.options.dbName);
       var posts = [];
       db.collection('posts').find().each((err, post) => {
         if (post != null) {
           posts.push(post);
         } else {
           resolve(posts);
+          pool.release(client);
         }
-        pool.release(db);
       });
     }).catch((err) => { reject(err); });
   });
@@ -84,9 +84,11 @@ function find(pool, name) {
   return new Promise((resolve, reject) => {
     var url = encodeURIComponent(decodeURIComponent(name));
 
-    pool.acquire().then((db) => {
+    pool.acquire().then((client) => {
+      const db = client.db(client.s.options.dbName);
       db.collection('posts').findOne({ 'url': { $regex: new RegExp(`^${url}$`, 'i') } }, {}, (err, doc) => {
         resolve(doc);
+        pool.release(client);
       });
     }).catch((err) => { reject(err); });
   });
@@ -94,7 +96,8 @@ function find(pool, name) {
 
 function create(pool, post) {
   return new Promise((resolve, reject) => {
-    pool.acquire().then((db) => {
+    pool.acquire().then((client) => {
+      const db = client.db(client.s.options.dbName);
       var url = post.name.replace(/\s+/g, '-');
       post.url = encodeURIComponent(url);
       post.down = post.up = post.visitors = 0;
@@ -112,12 +115,14 @@ function create(pool, post) {
         } else {
           if (doc != null) {
             resolve({ validation: false, error: [{ param: 'name', msg: 'name exists' }] });
+            pool.release(client);
           } else {
             db.collection('posts').insertOne(post, (err, result) => {
               if (err) {
                 reject(err);
               } else {
                 resolve(result);
+                pool.release(client);
               }
             });
           }
@@ -129,7 +134,8 @@ function create(pool, post) {
 
 function update(pool, name, post) {
   return new Promise((resolve, reject) => {
-    pool.acquire().then((db) => {
+    pool.acquire().then((client) => {
+      const db = client.db(client.s.options.dbName);
       var timestamp = Date.now();
       var url = encodeURIComponent(decodeURIComponent(name));
 
@@ -147,6 +153,7 @@ function update(pool, name, post) {
           } else {
             if (doc != null && doc.url != url) {
               resolve({ validation: false, error: [{ param: 'name', msg: 'name or url exists' }] });
+              pool.release(client);
             } else {
               db.collection('posts').updateOne(
                 { 'url': url },
@@ -176,6 +183,7 @@ function update(pool, name, post) {
                         (err, rres) => { err ? reject(err) : resolve(rres); }
                       )
                     }
+                    pool.release(client);
                   }
                 }
               );
@@ -283,11 +291,13 @@ function update_old(pool, name, post) {
 
 function remove(pool, name) {
   return new Promise((resolve, reject) => {
-    pool.acquire().then((err, db) => {
+    pool.acquire().then((client) => {
+      const db = client.db(client.s.options.dbName);
       var url = encodeURIComponent(decodeURIComponent(name));
 
       db.collection('posts').deleteOne({ 'url': { $regex: new RegExp(`^${url}$`, 'i') } }, (err, res) => {
         resolve(res);
+        pool.release(client);
       })
     }).catch((err) => { reject(err); });
   });
